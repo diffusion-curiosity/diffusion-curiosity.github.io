@@ -1,13 +1,301 @@
-<html lang="en">
+<!DOCTYPE html>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js">
+</script>
+<html>
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta property="og:title" content="Unsupervised Exploration via Dynamics Diffusion">
+    <meta property="og:description" content="Unsupervised Exploration via Dynamics Diffusion">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Unsupervised Exploration via Dynamics Diffusion">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Unsupervised Exploration via Dynamics Diffusion">
+    <meta name="twitter:description" content="Unsupervised Exploration via Dynamics Diffusion">
+    <meta name="twitter:image" content="./mfiles/figs/intro.png" />
+    <link rel="shortcut icon" href="mfiles/favicon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/simple-grid.css">
+    <title>Unsupervised Exploration via Dynamics Diffusion</title>
 </head>
 
 <body>
-    <h1> Hello World</h1>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col-12 center mb-3">
+                    <h1 style="font-size: 2.5em;">
+                        Unsupervised Exploration via Dynamics Diffusion
+                    </h1>
+                </div>
+
+                <div class="col-3 hidden-sm"></div>
+            </div>
+
+
+            <div class="row mt-3">
+                <div class="col-12 center img">
+                    <img class="center" src="./mfiles/figs/teaser_ddcm.png"
+                        style="width:100%; height:auto; overflow:visible;"></img>
+                </div>
+            </div>
+
+            <!--Abstract-->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h2 class="center m-bottom">Abstract</h2>
+                    <p>
+                        Sequential decision making problems in the real world often have sparse or no reward. To make
+                        progress, agents must rely on intrinsic signals which are usually based on measuring the
+                        'novelty' of visited states using count-based or curiosity rewards. These approaches show
+                        promise in simple game-like environments but get stuck in high-dimensional control settings.
+                        They tend to fixate on minor, yet hard to perfectly model details such as the motion of a robot
+                        arm in free space. In this work, we introduce <strong><b
+                                style="color: #00A2FF; font-weight: bold">Dynamics Diffusion Curiosity
+                                Models</b> </strong> (<b style="color: #00A2FF">DDCM</b>) that
+                        estimate an intrinsic reward as the variance along the denoising process. This naturally avoids
+                        the fixation problem since the denoised predictions evolve in a coarse-to-fine manner. We
+                        integrate DDCMs into three state-of-the-art unsupervised RL approaches and yield 20-120% better
+                        performance across a suite of benchmarks. We find that even in long-horizon tasks with
+                        high-dimensional control, such as a mobile manipulator in a kitchen, DDCMs enable 10% zero-shot
+                        success rate on mobile manipulation tasks while the vanilla methods make no progress.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-12">
+                    <h2 class="center mb-3">Methods</h2>
+                    <div class="col-12 center img">
+                        <img class="center" src="./mfiles/figs/method.png" style="width:100%"></img>
+                    </div>
+                    <p>Fixation is a result of overindexing on the fine details of the state or dynamics. One way to
+                        avoid this is to explicitly prioritize coarse (low-frequency) features of the state over finer
+                        (high-frequency) ones. How can we learn this coarse-to-fine structure over states?</p>
+
+                    <p>In this paper, we leverage a key property of diffusion models—during the denoising process,
+                        images are formed in a coarse-to-fine manner. We introduce <strong><b
+                                style="color: #00A2FF; font-weight: bold">Dynamics Diffusion Curiosity
+                                Models</b> </strong> (<b style="color: #00A2FF">DDCM</b>) that fit a
+                        diffusion model to estimate
+                        the clean state from a noisy
+                        state at different diffusion timesteps. If the noisy state only differs in the fine details,
+                        these emerge during the last stages of the denoising process. Consequently, the clean state
+                        estimate does not change for most of the denoising process. We can therefore use a measure of
+                        spread in these estimates for different timesteps as an exploration reward that avoids fixation.
+                    </p>
+
+                    <p>We experiment with standard benchmark tasks across three unsupervised reinforcement learning (RL)
+                        methods—LEXA, PEG, and Plan2Explore. For each, we replace the intrinsic reward module with a
+                        DDCM and observe that it dramatically improves performance while outperforming other
+                        unsupervised RL baselines.Additionally, we propose a new unsupervised RL benchmark based on
+                        RoboCasa, which features mobile
+                        manipulators in large kitchen environments with egocentric cameras. This benchmark is
+                        particularly challenging due to partial observability (from egocentric cameras) and a high
+                        exploration burden (from the large number of degrees of freedom). We show that DDCMs achieve
+                        zero-shot success rates of up to 10% on mobile manipulation in this benchmark, whereas baselines
+                        remain at zero.</p>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class=" container mt-5">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="center mb-3">Can DDCM improve vanilla unsupervised GCRL?</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 center img">
+                    <figure>
+                        <img class="center" src="./mfiles/figs/results_stacking_walker.png" style="width:100%"
+                            alt="Stacking and Walker Task Results">
+                        <figcaption class="text-center mt-2">Figure 1: Goal-reaching performance on the Block
+                            Stacking
+                            and Walker
+                            tasks. DDCM shows improved exploration and goal achievement compared to baselines.
+                        </figcaption>
+                    </figure>
+                </div>
+
+                <div class="col-12 center img">
+                    <figure>
+                        <img class="center" src="./mfiles/figs/results_kitchen_robocasa.png" style="width:80%"
+                            alt="Kitchen RoboCasa Task Results">
+                        <figcaption class="text-center mt-2">Figure 2: Goal-reaching performance on the Franka
+                            Kitchen
+                            and RoboCasa
+                            task. DDCM enables effective exploration in large-scale manipulation environments.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="center mb-3">Comparison with other intrinsic reward
+                        methods</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 center img">
+                    <figure>
+                        <img class="center" src="./mfiles/figs/exp_expl_baseline.png" style="width:100%"
+                            alt="Stacking and Walker Task Results">
+                        <figcaption class="text-center mt-2">Figure 1: Comparison of Goal-reaching performance
+                            with
+                            other intrinsic reward methods.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="center mb-3">Ablation Analysis</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 center img">
+                    <img class="center" src="./mfiles/figs/ablation_noise.png" style="width:50%"
+                        alt="Ablation study on noise levels">
+                    <p class="text-center mt-2">
+                        <strong>Figure 1:</strong> This figure illustrates the effect of noise levels on
+                        goal-reaching
+                        performance. The results show that applying only high or low noise levels degrades
+                        performance
+                        compared to our original choice. High noise corrupts latent representations, making it
+                        difficult
+                        to extract meaningful information, while low noise alone fails to introduce sufficient
+                        variability to overcome fixation. Additionally, using no noise or applying the same
+                        noise level
+                        for all predictors prevents the model from leveraging the coarse-to-fine nature of
+                        diffusion,
+                        leading to early stagnation. In contrast, incorporating noise across multiple levels
+                        enables
+                        structured exploration and significantly improves goal-reaching performance.
+                    </p>
+                </div>
+
+                <div class="col-12 center img">
+                    <img class="center" src="./mfiles/figs/ablation_horizon.png" style="width:50%"
+                        alt="Ablation study on future prediction horizon">
+                    <p class="text-center mt-2">
+                        <strong>Figure 2:</strong> This figure presents the effect of the future prediction
+                        horizon
+                        (H) on goal-reaching performance. The evaluation includes (H = 2, 4, 8), showing that a
+                        longer horizon leads to higher success rates. A short horizon limits the model's ability
+                        to
+                        anticipate long-term dependencies, restricting its capacity to plan effectively.
+                        Extending the
+                        future horizon allows the agent to plan over longer timescales, leading to improved
+                        goal-reaching performance.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="center mb-3">Test Time Goal Visualizations</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <!-- Walker Environment -->
+                <div class="col-12 center img">
+                    <img class="center" src="./mfiles/figs/walker_goal.png" style="width:50%"
+                        alt="Walker goal-reaching task">
+                    <p class="text-center mt-2">
+                        <strong>Walker Environment:</strong> Evaluation goals involve reaching target positions
+                        at 7
+                        meters and 12 meters from
+                        the initial pose, testing the robot's ability to learn stable locomotion behaviors.
+                    </p>
+                </div>
+
+                <!-- Block Stacking Environment -->
+                <div class="col-12 center img">
+                    <img class="center" src="./mfiles/figs/block_stacking_goal.png" style="width:50%"
+                        alt="Block stacking task">
+                    <p class="text-center mt-2">
+                        <strong>Block Stacking Environment:</strong> During evaluation, the robot is tasked with
+                        stacking three blocks into a tower configuration,
+                        requiring pushing, picking, and stacking skills.
+                    </p>
+                </div>
+
+                <!-- Kitchen Environment -->
+                <div class="col-12 center img">
+                    <img class="center" src="./mfiles/figs/kitchen_goal.png" style="width:100%"
+                        alt="Kitchen manipulation task">
+                    <p class="text-center mt-2">
+                        <strong>Kitchen Environment:</strong> The robot is tasked with manipulating different
+                        kitchen
+                        appliances, including a burner, light
+                        switch, sliding cabinet, hinge cabinet, microwave, and kettle. During evaluation, the
+                        robot must
+                        successfully operate one to three appliances by moving them to the target states.
+                    </p>
+                </div>
+
+                <!-- RoboCasa Environment -->
+                <div class="col-12 center img">
+                    <img class="center" src="./mfiles/figs/robocasa_goal.png" style="width:60%"
+                        alt="RoboCasa mobile manipulation task">
+                    <p class="text-center mt-2">
+                        <strong>RoboCasa Environment:</strong> Tasks in this environment include navigation and
+                        mobile
+                        manipulation, where the robot must move
+                        to specific target locations and interact with objects, such as operating a closet door
+                        or a
+                        sink faucet, to achieve evaluation goals.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!--Image-->
+
+
+    </div>
+    <footer>
+    </footer>
 </body>
 
 </html>
